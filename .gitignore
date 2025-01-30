@@ -1,0 +1,26 @@
+# Node.js dependencies
+/node_modules
+
+# Build y producción
+/build
+/dist
+
+# Archivos de configuración y entorno
+.env*
+
+# Archivos de depuración y logs
+npm-debug.log*
+yarn-debug.log*
+
+# Directorios específicos de React y Vite
+/.next/
+/.out/
+/.vite/
+.vitepress/
+/.vercel
+
+# Caché de pruebas y cobertura
+/coverage
+
+# Archivos de sistema innecesarios
+.DS_Store
