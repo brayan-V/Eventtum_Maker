@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import { connectDB } from "./db.js";
 import authRoutes from "./routes/auth.routes.js";
+import eventRoutes from "./routes/event.routes.js";
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use(cookieParser()); // Habilitar el parser de cookies
 
 // Rutas
 app.use("/api/auth", authRoutes); // Rutas de autenticación
+app.use("/api/events", eventRoutes); // Rutas de eventos
 
 // Conectar a MongoDB
 connectDB();
