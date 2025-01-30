@@ -5,6 +5,7 @@ const eventSchema = new mongoose.Schema(
   {
     name: { type: String, required: true }, // Nombre del evento
     date: { type: Date, required: true }, // Fecha del evento
+    time: { type: String, required: true }, // Hora del evento
     location: { type: String, required: true }, // Ubicación del evento
     description: { type: String, required: true }, // Descripción del evento
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }, // Relación con el usuario

@@ -9,7 +9,10 @@ import eventRoutes from "./routes/event.routes.js";
 const app = express();
 
 // Middlewares
-app.use(cors()); // Configurar CORS
+app.use(cors({
+    origin:"http://localhost:5173/",
+    credentials: true
+})); // Configurar CORS
 app.use(morgan("dev")); // Registrar solicitudes HTTP en la consola
 app.use(express.json()); // Habilitar el formato JSON
 app.use(cookieParser()); // Habilitar el parser de cookies

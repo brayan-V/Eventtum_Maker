@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { register, login } from "../controllers/auth.controller.js";
+import { register, login,verifyToken  } from "../controllers/auth.controller.js";
 
 const router = Router();
 
@@ -8,5 +8,6 @@ router.post("/register", register);
 
 // Ruta para iniciar sesión
 router.post("/login", login);
-
+// Ruta para verificar el token
+router.get("/verify", verifyToken);
 export default router;

@@ -24,10 +24,10 @@ export const getEvents = async (req, res) => {
 
 // Función para crear un nuevo evento
 export const createEvent = async (req, res) => {
-    const { name, date, location, description } = req.body;
+    const { name, date, time, location, description } = req.body;
 
     try {
-        const newEvent = new Event({ name, date, location, description, user: req.user.id }); // Crear un nuevo evento
+        const newEvent = new Event({ name, date, time, location, description, user: req.user.id }); // Crear un nuevo evento
         const eventSaved = await newEvent.save(); // Guardar el evento en la base de datos
         res.status(201).json(eventSaved); // Responder con el evento creado
     } catch (error) {
@@ -38,7 +38,7 @@ export const createEvent = async (req, res) => {
 // Función para actualizar un evento existente
 export const updateEvent = async (req, res) => {
     const { id } = req.params; // Obtener el ID del evento a actualizar
-    const { name, date, location, description } = req.body; // Obtener los nuevos datos del evento
+    const { name, date, time, location, description } = req.body; // Obtener los nuevos datos del evento
 
     try {
         // Buscar el evento por ID y verificar que pertenezca al usuario autenticado
@@ -50,6 +50,7 @@ export const updateEvent = async (req, res) => {
         // Actualizar los campos del evento
         event.name = name || event.name;
         event.date = date || event.date;
+        event.time = time || event.time;
         event.location = location || event.location;
         event.description = description || event.description;
 

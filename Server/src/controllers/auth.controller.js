@@ -26,7 +26,7 @@ export const register = async (req, res) => {
     });
 
     // Enviar el token como una cookie
-    res.cookie("token");
+    res.cookie("token", token);
 
     // Responder con los datos del usuario
     res.json({ message: "User created successfully", user: userSaved });
@@ -55,15 +55,23 @@ export const login = async (req, res) => {
     });
 
     // Enviar el token como una cookie
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: false,
-      sameSite: "strict",
-    });
+    res.cookie("token", token);
 
     // Responder con los datos del usuario
-    res.json({ message: "Login successful", user: userFound });
+    res.json({ message: "Login successful", user: {
+      id: userFound._id,
+      username: userFound.username,
+    }});
   } catch (error) {
     res.status(500).json({ message: error.message }); // Manejar errores
   }
+};
+export const verifyToken = (req, res) => {
+  const token = req.cookies.token; // Obtener el token de las cookies
+  if (!token) return res.status(401).json({ message: "Unauthorized" });
+
+  jwt.verify(token, TOKEN_SECRET_KEY, (err, user) => {
+      if (err) return res.status(403).json({ message: "Invalid token" });
+      res.json({ message: "Token is valid", user });
+  });
 };
