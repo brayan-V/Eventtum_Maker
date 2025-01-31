@@ -28,6 +28,7 @@ const LoginPage = () => {
                     onChange={(e) => setUser({ ...user, email: e.target.value })}
                     fullWidth
                     margin="normal"
+                    required
                 />
                 <TextField
                     label="Contraseña"
@@ -36,6 +37,7 @@ const LoginPage = () => {
                     onChange={(e) => setUser({ ...user, password: e.target.value })}
                     fullWidth
                     margin="normal"
+                    required
                 />
                 <Button type="submit" variant="contained" color="primary">
                     Iniciar Sesión

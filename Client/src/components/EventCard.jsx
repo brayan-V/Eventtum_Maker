@@ -5,7 +5,7 @@ dayjs.extend(utc);
 
 const EventCard = ({ event, onEdit, onDelete }) => {
     return (
-        <Card sx={{ marginBottom: 2 }}>
+        <Card sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%' }}>
             <CardContent>
                 <Typography variant="h5" component="div">
                     {event.name}

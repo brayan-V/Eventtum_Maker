@@ -15,7 +15,7 @@ export const getEvents = async (req, res) => {
         }
 
         // Buscar eventos que coincidan con los filtros
-        const events = await Event.find(filter).populate("user");
+        const events = await Event.find(filter);
         res.json(events); // Responder con los eventos filtrados
     } catch (error) {
         res.status(500).json({ message: error.message }); // Manejar errores

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { createEventRequest, updateEventRequest, getEventsRequest } from "../api/events";
 import { TextField, Button, Container, Typography } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
@@ -47,6 +47,10 @@ const EventFormPage = () => {
         } catch (error) {
             console.error("Error saving event:", error);
         }
+    };
+
+    const handleCancel = () => {
+        navigate("/events");
     };
 
     return (
@@ -103,6 +107,9 @@ const EventFormPage = () => {
                 />
                 <Button type="submit" variant="contained" color="primary" sx={{ marginTop: 2 }}>
                     {id ? "Guardar Cambios" : "Crear Evento"}
+                </Button>
+                <Button variant="outlined" color="secondary" onClick={handleCancel} sx={{ marginTop: 2, marginLeft: 2 }}>
+                    Cancelar
                 </Button>
             </form>
         </Container>

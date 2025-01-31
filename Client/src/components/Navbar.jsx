@@ -1,11 +1,13 @@
-import { useContext } from "react";
-import { AppBar, Toolbar, Typography, Button } from "@mui/material";
+import { useContext, useState } from "react";
+import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
 import { AuthContext } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
+import ConfirmationModal from "./ConfirmationModal";
 
 const Navbar = () => {
     const { user, isAuthenticated, logout } = useContext(AuthContext);
     const navigate = useNavigate(); 
+    const [logoutModalOpen, setLogoutModalOpen] = useState(false);
 
     const handleLogout = () => {
         logout();
@@ -28,12 +30,14 @@ const Navbar = () => {
                         <Button color="inherit" component={Link} to="/create-event">
                             Crear Evento
                         </Button>
-                        <Typography variant="subtitle1" sx={{ marginRight: 2 }}>
-                            Hola, {user.username}!
-                        </Typography>
-                        <Button color="inherit" onClick={handleLogout}>
-                            Cerrar Sesión
-                        </Button>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                            <Typography variant="subtitle2" sx={{ fontSize: '0.875rem' }}>
+                                Hola, {user.username}!
+                            </Typography>
+                            <Button color="inherit" onClick={() => setLogoutModalOpen(true)} sx={{ fontSize: '0.75rem' }}>
+                                Cerrar Sesión
+                            </Button>
+                        </Box>
                     </>
                 ) : (
                     <>
@@ -46,6 +50,13 @@ const Navbar = () => {
                     </>
                 )}
             </Toolbar>
+            <ConfirmationModal
+                open={logoutModalOpen}
+                handleClose={() => setLogoutModalOpen(false)}
+                handleConfirm={handleLogout}
+                title="Confirmar Cierre de Sesión"
+                description="¿Estás seguro de que deseas cerrar sesión?"
+            />
         </AppBar>
     );
 };
