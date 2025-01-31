@@ -24,7 +24,7 @@ const Navbar = () => {
                     sx={{ flexGrow: 1, cursor: 'pointer' }} 
                     onClick={() => navigate("/")}
                 >
-                    EVenttum Maker
+                    Eventtum Maker
                 </Typography>
                 {isAuthenticated ? (
                     <>
