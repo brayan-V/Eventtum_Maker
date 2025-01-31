@@ -66,12 +66,17 @@ export const login = async (req, res) => {
     res.status(500).json({ message: error.message }); // Manejar errores
   }
 };
-export const verifyToken = (req, res) => {
-  const token = req.cookies.token; // Obtener el token de las cookies
+export const verifyToken = async (req, res) => {
+  const token = req.cookies.token;
   if (!token) return res.status(401).json({ message: "Unauthorized" });
 
-  jwt.verify(token, TOKEN_SECRET_KEY, (err, user) => {
-      if (err) return res.status(403).json({ message: "Invalid token" });
-      res.json({ message: "Token is valid", user });
-  });
+  try {
+      const decoded = jwt.verify(token, TOKEN_SECRET_KEY);
+      const user = await User.findById(decoded.id);
+      if (!user) return res.status(401).json({ message: "Unauthorized" });
+
+      res.json({ user });
+  } catch (error) {
+      res.status(401).json({ message: "Unauthorized" });
+  }
 };

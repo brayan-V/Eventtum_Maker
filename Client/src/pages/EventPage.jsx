@@ -1,14 +1,12 @@
-import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../context/AuthContext";
+import { useEffect, useState } from "react";
 import { getEventsRequest, deleteEventRequest } from "../api/events";
 import { Container, Typography, Button } from "@mui/material";
 import EventCard from "../components/EventCard";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const EventPage = () => {
-    const { user, isAuthenticated } = useContext(AuthContext);
     const [events, setEvents] = useState([]);
-
+    const navigate = useNavigate();
     useEffect(() => {
         const fetchEvents = async () => {
             try {
@@ -29,6 +27,9 @@ const EventPage = () => {
             console.error("Error deleting event:", error);
         }
     };
+    const handleEdit = (id) => {
+        navigate(`/edit-event/${id}`);
+    };
 
     return (
         <Container>
@@ -42,7 +43,7 @@ const EventPage = () => {
                     <EventCard
                         key={event._id}
                         event={event}
-                        onEdit={() => console.log("Editar evento:", event._id)}
+                        onEdit={() => handleEdit(event._id)}
                         onDelete={handleDelete}
                     />
                 ))

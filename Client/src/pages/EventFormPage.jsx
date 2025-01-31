@@ -1,14 +1,20 @@
-import { useState, useContext, useEffect } from "react";
-import { AuthContext } from "../context/AuthContext";
+import { useState, useEffect } from "react";
 import { createEventRequest, updateEventRequest, getEventsRequest } from "../api/events";
 import { TextField, Button, Container, Typography } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+dayjs.extend(utc);
 
 const EventFormPage = () => {
     const { id } = useParams();
-    const { user } = useContext(AuthContext);
     const [event, setEvent] = useState({ name: "", date: "", time: "", location: "", description: "" });
     const navigate = useNavigate();
+
+    const formatEventData = (data) =>({
+        ...data,
+        date: dayjs.utc(data.date).format(),
+    });
 
     useEffect(() => {
         if (id) {
@@ -17,7 +23,10 @@ const EventFormPage = () => {
                 try {
                     const res = await getEventsRequest();
                     const eventToEdit = res.data.find((event) => event._id === id);
-                    if (eventToEdit) setEvent(eventToEdit);
+                    if (eventToEdit) setEvent({
+                        ...eventToEdit,
+                        date: dayjs.utc(eventToEdit.date).format("YYYY-MM-DD")
+                    });
                 } catch (error) {
                     console.error("Error fetching event:", error);
                 }
@@ -30,9 +39,9 @@ const EventFormPage = () => {
         e.preventDefault();
         try {
             if (id) {
-                await updateEventRequest(id, event);
+                await updateEventRequest(id, formatEventData(event));
             } else {
-                await createEventRequest({ ...event, user: user._id });
+                await createEventRequest(formatEventData(event));
             }
             navigate("/events");
         } catch (error) {

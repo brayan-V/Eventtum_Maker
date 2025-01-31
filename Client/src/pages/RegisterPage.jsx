@@ -8,10 +8,10 @@ const RegisterPage = () => {
     const [user, setUser] = useState({ username: "", email: "", password: "" });
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        signup(user);
-        navigate("/events");
+       const success = await signup(user);
+       if(success) navigate("/events");
     };
 
     return (

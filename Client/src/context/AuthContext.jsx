@@ -1,4 +1,3 @@
-// client/src/context/AuthContext.jsx
 import { createContext, useState, useEffect } from "react";
 import { registerRequest, loginRequest, verifyTokenRequest } from "../api/auth";
 import Cookies from "js-cookie";
@@ -15,9 +14,10 @@ export const AuthProvider = ({ children }) => {
             const res = await registerRequest(user);
             setUser(res.data.user);
             setIsAuthenticated(true);
+            return true;
         } catch (error) {
-            console.log(error)// depurando
             setErrors(error.response?.data?.message || "An unexpected error occurred");
+            return false;
         }
     };
 
@@ -26,9 +26,10 @@ export const AuthProvider = ({ children }) => {
             const res = await loginRequest(user);
             setUser(res.data.user);
             setIsAuthenticated(true);
+            return true;
         } catch (error) {
-            console.log(error)//depurando
             setErrors(error.response?.data?.message || "An unexpected error occurred");
+            return false;
         }
     };
 
@@ -53,7 +54,6 @@ export const AuthProvider = ({ children }) => {
                     setUser(res.data.user);
                 }
             } catch (error) {
-                console.log(error)//depurando
                 setIsAuthenticated(false);
                 setUser(null);
                 setErrors(error.response?.data?.message || "An unexpected error occurred");

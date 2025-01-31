@@ -1,4 +1,7 @@
 import { Card, CardContent, Typography, Button, CardActions } from "@mui/material";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+dayjs.extend(utc);
 
 const EventCard = ({ event, onEdit, onDelete }) => {
     return (
@@ -11,7 +14,7 @@ const EventCard = ({ event, onEdit, onDelete }) => {
                     {event.description}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                    Fecha: {new Date(event.date).toLocaleDateString()}
+                    Fecha: {dayjs(event.date).utc().format("DD/MM/YY")}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                     Hora: {event.time}

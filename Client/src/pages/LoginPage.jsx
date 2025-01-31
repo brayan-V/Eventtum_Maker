@@ -8,10 +8,12 @@ const LoginPage = () => {
     const [user, setUser] = useState({ email: "", password: "" });
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        signin(user);
-        navigate("/events");
+        const success = await signin(user);
+        if (success) {
+            navigate("/events"); // Redirigir a EventPage si está autenticado
+        }
     };
 
     return (
