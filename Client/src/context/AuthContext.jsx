@@ -1,3 +1,4 @@
+// client/src/context/AuthContext.jsx
 import { createContext, useState, useEffect } from "react";
 import { registerRequest, loginRequest, verifyTokenRequest } from "../api/auth";
 import Cookies from "js-cookie";
@@ -16,7 +17,7 @@ export const AuthProvider = ({ children }) => {
             setIsAuthenticated(true);
             return true;
         } catch (error) {
-            setErrors(error.response?.data?.message || "An unexpected error occurred");
+            setErrors([error.response?.data?.message || "An unexpected error occurred"]);
             return false;
         }
     };
@@ -28,7 +29,7 @@ export const AuthProvider = ({ children }) => {
             setIsAuthenticated(true);
             return true;
         } catch (error) {
-            setErrors(error.response?.data?.message || "An unexpected error occurred");
+            setErrors([error.response?.data?.message || "An unexpected error occurred"]);
             return false;
         }
     };
@@ -56,7 +57,6 @@ export const AuthProvider = ({ children }) => {
             } catch (error) {
                 setIsAuthenticated(false);
                 setUser(null);
-                setErrors(error.response?.data?.message || "An unexpected error occurred");
             }
         };
         checkLogin();

@@ -1,17 +1,19 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { createEventRequest, updateEventRequest, getEventsRequest } from "../api/events";
 import { TextField, Button, Container, Typography } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+import { eventSchema } from "../validation/eventValidation"; // Importa el esquema de validación
 dayjs.extend(utc);
 
 const EventFormPage = () => {
     const { id } = useParams();
     const [event, setEvent] = useState({ name: "", date: "", time: "", location: "", description: "" });
+    const [errors, setErrors] = useState({});
     const navigate = useNavigate();
 
-    const formatEventData = (data) =>({
+    const formatEventData = (data) => ({
         ...data,
         date: dayjs.utc(data.date).format(),
     });
@@ -38,6 +40,8 @@ const EventFormPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            // Validar datos del evento con zod
+            eventSchema.parse(event);
             if (id) {
                 await updateEventRequest(id, formatEventData(event));
             } else {
@@ -45,7 +49,13 @@ const EventFormPage = () => {
             }
             navigate("/events");
         } catch (error) {
-            console.error("Error saving event:", error);
+            if (error.errors) {
+                const errorMessages = error.errors.reduce((acc, err) => {
+                    acc[err.path[0]] = err.message;
+                    return acc;
+                }, {});
+                setErrors(errorMessages);
+            }
         }
     };
 
@@ -66,6 +76,8 @@ const EventFormPage = () => {
                     fullWidth
                     margin="normal"
                     required
+                    error={Boolean(errors.name)}
+                    helperText={errors.name}
                 />
                 <TextField
                     label="Fecha"
@@ -76,6 +88,8 @@ const EventFormPage = () => {
                     margin="normal"
                     InputLabelProps={{ shrink: true }}
                     required
+                    error={Boolean(errors.date)}
+                    helperText={errors.date}
                 />
                 <TextField
                     label="Hora"
@@ -86,6 +100,8 @@ const EventFormPage = () => {
                     margin="normal"
                     InputLabelProps={{ shrink: true }}
                     required
+                    error={Boolean(errors.time)}
+                    helperText={errors.time}
                 />
                 <TextField
                     label="Ubicación"
@@ -94,6 +110,8 @@ const EventFormPage = () => {
                     fullWidth
                     margin="normal"
                     required
+                    error={Boolean(errors.location)}
+                    helperText={errors.location}
                 />
                 <TextField
                     label="Descripción"
@@ -104,6 +122,8 @@ const EventFormPage = () => {
                     multiline
                     rows={4}
                     required
+                    error={Boolean(errors.description)}
+                    helperText={errors.description}
                 />
                 <Button type="submit" variant="contained" color="primary" sx={{ marginTop: 2 }}>
                     {id ? "Guardar Cambios" : "Crear Evento"}

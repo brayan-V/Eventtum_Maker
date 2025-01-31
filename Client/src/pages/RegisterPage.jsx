@@ -1,17 +1,31 @@
 import { useState, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { TextField, Button, Container, Typography } from "@mui/material";
+import { TextField, Button, Container, Typography, Box } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
+import { registerSchema } from "../validation/authValidation"; // Importa el esquema de validación
 
 const RegisterPage = () => {
-    const { signup, errors } = useContext(AuthContext);
+    const { signup, errors: authErrors } = useContext(AuthContext);
     const [user, setUser] = useState({ username: "", email: "", password: "" });
+    const [errors, setErrors] = useState({});
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-       const success = await signup(user);
-       if(success) navigate("/events");
+        try {
+            // Validar datos del registro con zod
+            registerSchema.parse(user);
+            const success = await signup(user);
+            if (success) navigate("/events");
+        } catch (error) {
+            if (error.errors) {
+                const errorMessages = error.errors.reduce((acc, err) => {
+                    acc[err.path[0]] = err.message;
+                    return acc;
+                }, {});
+                setErrors(errorMessages);
+            }
+        }
     };
 
     return (
@@ -26,6 +40,9 @@ const RegisterPage = () => {
                     onChange={(e) => setUser({ ...user, username: e.target.value })}
                     fullWidth
                     margin="normal"
+                    required
+                    error={Boolean(errors.username)}
+                    helperText={errors.username}
                 />
                 <TextField
                     label="Email"
@@ -33,6 +50,9 @@ const RegisterPage = () => {
                     onChange={(e) => setUser({ ...user, email: e.target.value })}
                     fullWidth
                     margin="normal"
+                    required
+                    error={Boolean(errors.email)}
+                    helperText={errors.email}
                 />
                 <TextField
                     label="Contraseña"
@@ -41,12 +61,23 @@ const RegisterPage = () => {
                     onChange={(e) => setUser({ ...user, password: e.target.value })}
                     fullWidth
                     margin="normal"
+                    required
+                    error={Boolean(errors.password)}
+                    helperText={errors.password}
                 />
                 <Button type="submit" variant="contained" color="primary">
                     Registrarse
                 </Button>
             </form>
-            {errors && <Typography color="error">{errors}</Typography>}
+            {authErrors.length > 0 && (
+                <Box sx={{ mt: 2 }}>
+                    {authErrors.map((err, index) => (
+                        <Typography key={index} color="error">
+                            {err}
+                        </Typography>
+                    ))}
+                </Box>
+            )}
             <Typography variant="body1" sx={{ marginTop: 2 }}>
                 ¿Ya tienes una cuenta? <Link to="/login">Inicia sesión aquí</Link>
             </Typography>

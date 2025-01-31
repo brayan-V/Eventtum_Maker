@@ -1,18 +1,30 @@
 import { useState, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { TextField, Button, Container, Typography } from "@mui/material";
+import { TextField, Button, Container, Typography, Box } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
+import { loginSchema } from "../validation/authValidation"; // Importa el esquema de validación
 
 const LoginPage = () => {
-    const { signin, errors } = useContext(AuthContext);
+    const { signin, errors: authErrors } = useContext(AuthContext);
     const [user, setUser] = useState({ email: "", password: "" });
+    const [errors, setErrors] = useState({});
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const success = await signin(user);
-        if (success) {
-            navigate("/events"); // Redirigir a EventPage si está autenticado
+        try {
+            // Validar datos del login con zod
+            loginSchema.parse(user);
+            const success = await signin(user);
+            if (success) navigate("/events");
+        } catch (error) {
+            if (error.errors) {
+                const errorMessages = error.errors.reduce((acc, err) => {
+                    acc[err.path[0]] = err.message;
+                    return acc;
+                }, {});
+                setErrors(errorMessages);
+            }
         }
     };
 
@@ -29,6 +41,8 @@ const LoginPage = () => {
                     fullWidth
                     margin="normal"
                     required
+                    error={Boolean(errors.email)}
+                    helperText={errors.email}
                 />
                 <TextField
                     label="Contraseña"
@@ -38,12 +52,22 @@ const LoginPage = () => {
                     fullWidth
                     margin="normal"
                     required
+                    error={Boolean(errors.password)}
+                    helperText={errors.password}
                 />
                 <Button type="submit" variant="contained" color="primary">
                     Iniciar Sesión
                 </Button>
             </form>
-            {errors && <Typography color="error">{errors}</Typography>}
+            {authErrors.length > 0 && (
+                <Box sx={{ mt: 2 }}>
+                    {authErrors.map((err, index) => (
+                        <Typography key={index} color="error">
+                            {err}
+                        </Typography>
+                    ))}
+                </Box>
+            )}
             <Typography variant="body1" sx={{ marginTop: 2 }}>
                 ¿No tienes una cuenta? <Link to="/register">Regístrate aquí</Link>
             </Typography>
