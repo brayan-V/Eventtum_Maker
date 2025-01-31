@@ -8,7 +8,7 @@ const HomePage = () => {
         <Container sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
             <Box sx={{ textAlign: 'center' }}>
                 <Typography variant="h3" gutterBottom>
-                    {isAuthenticated ? `Hola ${user.username}`: " Bienvenido a Event Manager"}
+                    {isAuthenticated ? `Hola ${user.username}`: " Bienvenido a EVENTTUM MAKER"}
                 </Typography>
                 <Typography variant="body1" gutterBottom>
                     {isAuthenticated ? " ":"Gestiona tus eventos de manera sencilla y eficiente."}

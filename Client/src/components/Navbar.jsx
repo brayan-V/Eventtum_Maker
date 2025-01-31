@@ -11,6 +11,7 @@ const Navbar = () => {
 
     const handleLogout = () => {
         logout();
+        setLogoutModalOpen(false); // Cierra la modal
         navigate("/"); 
     };
 
@@ -23,7 +24,7 @@ const Navbar = () => {
                     sx={{ flexGrow: 1, cursor: 'pointer' }} 
                     onClick={() => navigate("/")}
                 >
-                    EVENT MANAGER
+                    EVENTUM
                 </Typography>
                 {isAuthenticated ? (
                     <>
