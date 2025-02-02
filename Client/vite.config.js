@@ -7,7 +7,7 @@ export default defineConfig({
     port: 5173, // Puerto por defecto de Vite
     proxy: {
       "/api": {
-        target: "http://localhost:3000", // Backend
+        target: "http://localhost:4000", // Backend
         changeOrigin: true,
         secure: false,
       },

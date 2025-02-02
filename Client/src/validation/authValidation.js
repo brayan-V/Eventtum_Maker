@@ -24,7 +24,6 @@ const passwordValidation = z
   .regex(/[@$!%*?&-/]/, {
     message: "Password must contain at least one special character (@$!%*?&-/)",
   });
-
 // Validamos que los datos del login sean del tipo correcto
 export const loginSchema = z.object({
   email: emailValidation,
@@ -32,10 +31,18 @@ export const loginSchema = z.object({
 });
 
 // Validamos que los datos del registro sean del tipo correcto
-export const registerSchema = z.object({
-  username: z.string({
-    required_error: "Username is required",
-  }),
-  email: emailValidation,
-  password: passwordValidation,
-});
+export const registerSchema = z
+  .object({
+    username: z.string({
+      required_error: "Username is required",
+    }),
+    email: emailValidation,
+    password: passwordValidation,
+    confirmPassword: z.string({
+      required_error: "Confirm Password is required",
+    }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });

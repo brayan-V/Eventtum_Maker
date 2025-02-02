@@ -6,7 +6,7 @@ import { registerSchema } from "../validation/authValidation"; // Importa el esq
 
 const RegisterPage = () => {
     const { signup, errors: authErrors } = useContext(AuthContext);
-    const [user, setUser] = useState({ username: "", email: "", password: "" });
+    const [user, setUser] = useState({ username: "", email: "", password: "", confirmPassword: "" });
     const [errors, setErrors] = useState({});
     const navigate = useNavigate();
 
@@ -64,6 +64,17 @@ const RegisterPage = () => {
                     required
                     error={Boolean(errors.password)}
                     helperText={errors.password}
+                />
+                <TextField
+                label="Confirmar Contraseña"
+                type="password"
+                value={user.confirmPassword}
+                onChange={(e) => setUser({...user, confirmPassword: e.target.value})}
+                fullWidth
+                margin="normal"
+                required
+                error={Boolean(errors.confirmPassword)}
+                helperText={errors.confirmPassword}
                 />
                 <Button type="submit" variant="contained" color="primary">
                     Registrarse
